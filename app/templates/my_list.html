@@ -1,0 +1,11 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+<div class="myvideo">
+        <video id="vid" controls autoplay="autoplay" muted="muted" width="100%" height="auto" name="media" >
+                <source src="{{file_name}}" type="video/mp4">
+        </video>
+</div>
+<script>
+        document.getElementById('vid').play();
+</script>
+{% endblock %}

@@ -1,4 +1,6 @@
 import os
+import redis
+
 from flask_appbuilder.security.manager import (
     AUTH_OID,
     AUTH_REMOTE_USER,
@@ -13,9 +15,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 SECRET_KEY = "\2\1thisismyscretkey\1\2\e\y\y\h"
 
 # The SQLAlchemy connection string.
-SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
+# SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(basedir, "app.db")
 # SQLALCHEMY_DATABASE_URI = 'mysql://myapp@localhost/myapp'
 # SQLALCHEMY_DATABASE_URI = 'postgresql://root:password@localhost/myapp'
+
+SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URI']
+
+SESSION_TYPE = 'redis'
+SESSION_PERMANENT = False
+SESSION_USE_SIGNER = True
+SESSION_REDIS = redis.from_url(os.environ['REDIS_URI'])
 
 # Flask-WTF flag for CSRF
 CSRF_ENABLED = True
@@ -24,7 +33,7 @@ CSRF_ENABLED = True
 # GLOBALS FOR APP Builder
 # ------------------------------
 # Uncomment to setup Your App name
-# APP_NAME = "My App Name"
+APP_NAME = "KDB E-CAMPUS"
 
 # Uncomment to setup Setup an App icon
 # APP_ICON = "static/img/logo.jpg"
@@ -64,7 +73,7 @@ AUTH_TYPE = AUTH_DB
 # Babel config for translations
 # ---------------------------------------------------
 # Setup default language
-BABEL_DEFAULT_LOCALE = "en"
+BABEL_DEFAULT_LOCALE = "ko"
 # Your application default translation path
 BABEL_DEFAULT_FOLDER = "translations"
 # The allowed translation for you app
@@ -77,15 +86,20 @@ LANGUAGES = {
     "zh": {"flag": "cn", "name": "Chinese"},
     "ru": {"flag": "ru", "name": "Russian"},
     "pl": {"flag": "pl", "name": "Polish"},
+    "ko": {"flag": "ko", "name": "Coree"},
 }
 # ---------------------------------------------------
 # Image and file configuration
 # ---------------------------------------------------
-# The file upload folder, when using models with files
-UPLOAD_FOLDER = basedir + "/app/static/uploads/"
+if os.name == 'nt':
+    UPLOAD_FOLDER = "U:/static/uploads/"
+    IMG_UPLOAD_FOLDER = "U:/static/uploads/"
+else:
+    # The file upload folder, when using models with files
+    UPLOAD_FOLDER = "/static/uploads/"
 
-# The image upload folder, when using models with images
-IMG_UPLOAD_FOLDER = basedir + "/app/static/uploads/"
+    # The image upload folder, when using models with images
+    IMG_UPLOAD_FOLDER = "/static/uploads/"
 
 # The image upload url, when using models with images
 IMG_UPLOAD_URL = "/static/uploads/"
