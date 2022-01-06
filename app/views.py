@@ -43,6 +43,11 @@ class TestTableView(ModelView):
     edit_exclude_columns = ['id','create_on']
     add_exclude_columns = ['id','create_on']
 
+class TestTableApi(ModelRestApi):
+    
+    datamodel = SQLAInterface(TestTable)
+   
+
 class EcamFileView(ModelView):
     datamodel = SQLAInterface(EcamFile)
     list_title = 'File Upload TEST'
@@ -144,3 +149,4 @@ appbuilder.add_view(
     category = "TEST MENU"
 )
 appbuilder.add_view_no_menu(TestStream, "stream")
+appbuilder.add_api(TestTableApi)
