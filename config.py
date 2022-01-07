@@ -90,10 +90,11 @@ LANGUAGES = {
 }
 # ---------------------------------------------------
 # Image and file configuration
+# Modified by Hennry
 # ---------------------------------------------------
 if os.name == 'nt':
-    UPLOAD_FOLDER = "U:/static/uploads/"
-    IMG_UPLOAD_FOLDER = "U:/static/uploads/"
+    UPLOAD_FOLDER = "C:/static/uploads/"
+    IMG_UPLOAD_FOLDER = "C:/static/uploads/"
 else:
     # The file upload folder, when using models with files
     UPLOAD_FOLDER = "/static/uploads/"
@@ -106,7 +107,11 @@ IMG_UPLOAD_URL = "/static/uploads/"
 # Setup image size default is (300, 200, True)
 # IMG_SIZE = (300, 200, True)
 
+# Added by Hennry
 FAB_API_SWAGGER_UI = True
+
+# Added by Hennry
+SCHEDULER_API_ENABLED = True
 
 # Theme configuration
 # these are located on static/appbuilder/css/themes
@@ -124,3 +129,4 @@ FAB_API_SWAGGER_UI = True
 # APP_THEME = "spacelab.css"
 # APP_THEME = "united.css"
 # APP_THEME = "yeti.css"
+

@@ -1,11 +1,14 @@
-from flask import render_template, request, Response, send_file
+from flask import render_template, request, Response, send_file, jsonify
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder import BaseView, ModelView, ModelRestApi, expose, has_access
+from flask_appbuilder.filemanager import FileManager, uuid_namegen
+from flask_appbuilder.api import BaseApi, expose, protect
 from .models import TestTable, EcamFile
 from . import appbuilder, db, app
 
 import os
 import re
+import json
 
 """
     Create your Model based REST API::
@@ -56,6 +59,73 @@ class EcamFileView(ModelView):
     edit_exclude_columns = ['id','create_on']
     add_exclude_columns = ['id','create_on']
 
+class ContentsManager(BaseApi):
+    
+    resource_name = 'contents'
+    
+    @expose('/video', methods=['POST'])
+    @protect()
+    def post_video(self, **kwargs):
+        """POST Vidoe Upload
+        ---
+        post:
+          requestBody:
+            description: Video file
+            required: true
+            content:
+              multipart/form-data:
+                schema:
+                  type: object
+                  properties:
+                    file:
+                      type: string
+                      format: binary
+          responses:
+            201:
+              description: File Uploaded
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      return_code:
+                        type: integer
+                      stored_file_name:
+                        type: string
+                      message:
+                        type: string
+                    example:
+                      return_code: 1
+                      stored_file_name: f70c9a39-6f88-11ec-9c34-00505694d9ee_sep_file_example.mp4
+                      message: Well done
+            415:
+              description: Invalid Video Type
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      return_code:
+                        type: integer
+                      message:
+                        type: string
+                    example:
+                      return_code: -1
+                      message: jpg is not a video type.
+        """
+        file = request.files['file']
+        filetype = file.filename.split('.')[-1]
+        
+        if filetype.lower() not in ['mp4','mov']:
+            return jsonify({'return_code':-1, 'message':filetype+' is not a video type.'}), 415
+        
+        fm = FileManager()        
+        
+        sfilename = fm.save_file(file, uuid_namegen(file))
+        
+        return jsonify({'return_code':1, 'stored_file_name':sfilename, 'message':'well done'}), 201
+        
+    
 class TestStream(BaseView):
 
     default_view = 'stream'
@@ -150,3 +220,4 @@ appbuilder.add_view(
 )
 appbuilder.add_view_no_menu(TestStream, "stream")
 appbuilder.add_api(TestTableApi)
+appbuilder.add_api(ContentsManager)
