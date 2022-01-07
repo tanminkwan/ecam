@@ -1,6 +1,8 @@
 import logging
 
 from flask import Flask
+from flask_migrate import Migrate
+from flask_apscheduler import APScheduler
 from flask_appbuilder import AppBuilder, SQLA
 
 """
@@ -13,6 +15,13 @@ logging.getLogger().setLevel(logging.DEBUG)
 app = Flask(__name__)
 app.config.from_object("config")
 db = SQLA(app)
+
+migrate = Migrate(app, db)
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
 appbuilder = AppBuilder(app, db.session)
 
 
@@ -29,4 +38,4 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor.close()
 """
 
-from . import views
+from . import views, scheduled_jobs
