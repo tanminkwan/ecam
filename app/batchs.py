@@ -42,7 +42,7 @@ def _getManifestPath(stored_filename):
     filetype = stored_filename.split('.')[-1].lower()
     
     if filetype in ['mp4','mov']:
-        manifest_path = '/contents/' + stored_filename + '/playlist.m8u3'
+        manifest_path = '/contents/' + stored_filename + '/playlist.m3u8'
     elif filetype in ['jpg','png','gif']:
         manifest_path = '/contents/' + stored_filename
     else:
