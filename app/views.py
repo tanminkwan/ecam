@@ -1,9 +1,9 @@
 from flask import render_template, request, Response, send_file, jsonify
 from flask_appbuilder.models.sqla.interface import SQLAInterface
-from flask_appbuilder import BaseView, ModelView, ModelRestApi, expose, has_access
+from flask_appbuilder import BaseView, ModelView, ModelRestApi, has_access
 from flask_appbuilder.filemanager import FileManager, uuid_namegen
 from flask_appbuilder.api import BaseApi, expose, protect
-from .models import TestTable, EcamFile
+from .models import ContentMaster, TestTable, EcamFile
 from . import appbuilder, db, app
 
 import os
@@ -49,7 +49,6 @@ class TestTableView(ModelView):
 class TestTableApi(ModelRestApi):
     
     datamodel = SQLAInterface(TestTable)
-   
 
 class EcamFileView(ModelView):
     datamodel = SQLAInterface(EcamFile)
@@ -58,6 +57,10 @@ class EcamFileView(ModelView):
     label_columns = {'id':'SEQ','type_t':'파일Type','name':'이름','description':'메세지','create_on':'생성일지'}
     edit_exclude_columns = ['id','create_on']
     add_exclude_columns = ['id','create_on']
+
+class ContentMasterApi(ModelRestApi):
+    
+    datamodel = SQLAInterface(ContentMaster)
 
 class ContentsManager(BaseApi):
     
@@ -69,6 +72,7 @@ class ContentsManager(BaseApi):
         """POST Vidoe Upload
         ---
         post:
+          description: Upload a video file
           requestBody:
             description: Video file
             required: true
@@ -221,3 +225,4 @@ appbuilder.add_view(
 appbuilder.add_view_no_menu(TestStream, "stream")
 appbuilder.add_api(TestTableApi)
 appbuilder.add_api(ContentsManager)
+appbuilder.add_api(ContentMasterApi)
