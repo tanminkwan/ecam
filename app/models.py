@@ -1,9 +1,10 @@
 from flask import Markup, url_for
 from flask_appbuilder import Model
 from flask_appbuilder.models.mixins import FileColumn
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from .common import get_user, get_hostname, YnEnum
 
 """
 
@@ -11,8 +12,29 @@ You can use the extra Flask-AppBuilder fields and Mixin's
 
 AuditMixin will add automatic timestamp of created and modified by who
 
-
 """
+
+class ContentMaster(Model):
+
+    __tablename__ = "content_master"
+    __table_args__ = {"comment":"Content 정보"}
+    
+    id = Column(Integer, primary_key=True)
+    filename        = Column(String(100), nullable=False, comment='컨텐츠 파일 이름')
+    stored_filename = Column(String(500), nullable=False, comment='등록된 파일 이름')
+    description     = Column(String(500), nullable=True, comment='컨텐츠 설명')
+    content_type    = Column(String(50), nullable=True, comment='컨텐츠 파일 Type')
+    manifest_path   = Column(String(500), nullable=True, comment='m8u3 파일 url path')
+    valid_yn        = Column(Enum(YnEnum), info={'enum_class':YnEnum}, comment='파일 유효성 여부')
+    hostname        = Column(String(200), default=get_hostname, nullable=False, comment='입력 서버')
+    user_id         = Column(String(100), default=get_user, nullable=False, comment='입력 user')
+    create_on       = Column(DateTime(), default=datetime.now, nullable=False, comment='입력 일시')
+    
+    UniqueConstraint(stored_filename)
+    
+    def __repr__(self):
+        return self.filename
+
 class TestTable(Model):
     id = Column(Integer, primary_key=True)
     name = Column(String(50), nullable=False)
