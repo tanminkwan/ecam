@@ -35,3 +35,19 @@ def selectRows(table_name, filter_dict):
         
     return recs, 1
 
+def updateRows(table_name, update_dict, filter_dict):
+    
+    filter_list = []
+    table = table_dict[table_name]
+    
+    for item in filter_dict:
+        col = getattr(table, item)
+        filter_list.append(col==filter_dict[item])
+        
+    rt = db.session.query(table)\
+        .filter(*filter_list)\
+        .update(update_dict)
+        
+    if rt < 1:
+        return -1, table_name + ' data to update isn\'t found : '
+    return 1, ''

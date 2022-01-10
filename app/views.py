@@ -5,6 +5,7 @@ from flask_appbuilder.filemanager import FileManager, uuid_namegen
 from flask_appbuilder.api import BaseApi, expose, protect
 from .models import ContentMaster, TestTable, EcamFile
 from . import appbuilder, db, app
+from .scheduled_jobs import job_create_job
 
 import os
 import re
@@ -37,6 +38,10 @@ import json
         category_icon='fa-envelope'
     )
 """
+@db.event.listens_for(ContentMaster, 'after_insert')
+def update_stream_info(mapper, connection, target):
+    
+    job_create_job(target)
 
 class TestTableView(ModelView):
     datamodel = SQLAInterface(TestTable)
@@ -58,9 +63,25 @@ class EcamFileView(ModelView):
     edit_exclude_columns = ['id','create_on']
     add_exclude_columns = ['id','create_on']
 
+class ContentMasterView(ModelView):
+    datamodel = SQLAInterface(ContentMaster)
+    list_title = 'Content Master'
+    edit_exclude_columns = ['id','create_on']
+    add_exclude_columns = ['id','create_on']
+
 class ContentMasterApi(ModelRestApi):
     
     datamodel = SQLAInterface(ContentMaster)
+    add_columns = ['filename', 'description', 'stored_filename']
+    edit_columns = ['filename', 'description']
+    
+    def pre_add(self, item):
+        """
+            Override this, will be called before add.
+        """
+        print('ContentMasterApi ADD : ', item)
+        
+        pass
 
 class ContentsManager(BaseApi):
     
@@ -120,7 +141,7 @@ class ContentsManager(BaseApi):
         file = request.files['file']
         filetype = file.filename.split('.')[-1]
         
-        if filetype.lower() not in ['mp4','mov']:
+        if filetype.lower() not in ['mp4','mov','jpg','png','gif']:
             return jsonify({'return_code':-1, 'message':filetype+' is not a video type.'}), 415
         
         fm = FileManager()        
@@ -215,6 +236,12 @@ appbuilder.add_view(
     icon = "fa-folder-open-o",
     category = "TEST MENU",
     category_icon = "fa-envelope"
+)
+appbuilder.add_view(
+    ContentMasterView,
+    "Content Master",
+    icon = "fa-folder-open-o",
+    category = "TEST MENU"
 )
 appbuilder.add_view(
     EcamFileView,
