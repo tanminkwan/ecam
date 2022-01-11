@@ -74,13 +74,13 @@ class ContentMasterApi(ModelRestApi):
     datamodel = SQLAInterface(ContentMaster)
     add_columns = ['filename', 'description', 'stored_filename']
     edit_columns = ['filename', 'description']
+    list_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','user_id','create_on','hostname']
+    show_columns = ['content_type','create_on','description','filename','stream_url','hostname','manifest_path','stored_filename','user_id','valid_yn']
     
-    def pre_add(self, item):
+    def post_add(self, item):
         """
             Override this, will be called before add.
         """
-        print('ContentMasterApi ADD : ', item)
-        
         pass
 
 class ContentsManager(BaseApi):
