@@ -21,6 +21,8 @@ SECRET_KEY = "\2\1thisismyscretkey\1\2\e\y\y\h"
 
 SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URI']
 
+STREAM_URL = os.environ['STREAM_URL'] if os.environ.get('STREAM_URL') else ''
+
 SESSION_TYPE = 'redis'
 SESSION_PERMANENT = False
 SESSION_USE_SIGNER = True

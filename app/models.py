@@ -5,6 +5,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Uniq
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from .common import get_user, get_hostname, YnEnum
+from . import app
 
 """
 
@@ -31,6 +32,9 @@ class ContentMaster(Model):
     create_on       = Column(DateTime(), default=datetime.now, nullable=False, comment='입력 일시')
     
     UniqueConstraint(stored_filename)
+    
+    def stream_url(self):
+        return app.config['STREAM_URL'] if self.valid_yn.name == 'YES' else ''
     
     def __repr__(self):
         return self.filename
