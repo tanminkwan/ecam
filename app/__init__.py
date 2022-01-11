@@ -1,6 +1,7 @@
 import logging
 
 from flask import Flask
+from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_apscheduler import APScheduler
 from flask_appbuilder import AppBuilder, SQLA
@@ -22,6 +23,7 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
+CORS(app)
 appbuilder = AppBuilder(app, db.session)
 
 

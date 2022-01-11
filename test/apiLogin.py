@@ -6,7 +6,8 @@ def login(url, id, pw):
     data = dict(password=pw, username=id, provider='db', refresh='true')
     headers = {'Content-Type':'application/json'} 
     resp = requests.post(url, data=json.dumps(data), headers=headers)
-    
+
+    print('resp header : ',resp.headers)
     print('Result : ',resp.json())
     
     return resp.json()['access_token']
