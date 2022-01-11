@@ -15,5 +15,5 @@ def login(url, id, pw):
 
 if __name__ == "__main__":
     
-    token = login('http://localhost:5000/api/v1/security/login','tiffanie','1q2w3e4r!!')
+    token = login('http://ecampoc.leebalso.org:8080/api/v1/security/login','tiffanie','1q2w3e4r!!')
     print(token)
