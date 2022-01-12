@@ -134,8 +134,10 @@ class UserManager(BaseApi):
                         type: string
                       created_on:
                         type: string
+                        format: date-time                        
                       last_login:
                         type: string
+                        format: date-time                        
                     example:
                       return_code: 1
                       username: tiffanie
