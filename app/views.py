@@ -3,7 +3,7 @@ from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder import BaseView, ModelView, ModelRestApi, has_access
 from flask_appbuilder.filemanager import FileManager, uuid_namegen
 from flask_appbuilder.api import BaseApi, expose, protect
-from .models import ContentMaster, TestTable, EcamFile
+from .models import ContentMaster, TestTable, EcamFile, Program
 from . import appbuilder, db, app
 from .scheduled_jobs import job_create_job
 
@@ -75,7 +75,7 @@ class ContentMasterApi(ModelRestApi):
     add_columns = ['filename', 'description', 'stored_filename']
     edit_columns = ['filename', 'description']
     list_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','user_id','create_on','hostname']
-    show_columns = ['content_type','create_on','description','filename','stream_url','hostname','manifest_path','stored_filename','user_id','valid_yn']
+    show_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','user_id','create_on','hostname']
     
     def post_add(self, item):
         """
@@ -83,13 +83,28 @@ class ContentMasterApi(ModelRestApi):
         """
         pass
 
+class ProgramView(ModelView):
+    datamodel = SQLAInterface(Program)
+    list_title = 'Program'
+    list_columns = ['program_name','description','author','content_master','user_id','create_on','hostname']
+    edit_exclude_columns = ['id','create_on']
+    add_exclude_columns = ['id','create_on']
+
+class ProgramApi(ModelRestApi):
+    
+    datamodel = SQLAInterface(Program)
+    add_columns = ['program_name', 'description', 'author']
+    edit_columns = ['description', 'author']
+    list_columns = ['program_name','description','author','contentmaster','user_id','create_on','hostname']
+    show_columns = ['program_name','description','author','contentmaster','user_id','create_on','hostname']
+
 class ContentsManager(BaseApi):
     
     resource_name = 'contents'
     
-    @expose('/video', methods=['POST'])
+    @expose('/upload', methods=['POST'])
     @protect()
-    def post_video(self, **kwargs):
+    def upload_content(self, **kwargs):
         """POST Vidoe Upload
         ---
         post:
@@ -244,12 +259,19 @@ appbuilder.add_view(
     category = "TEST MENU"
 )
 appbuilder.add_view(
+    ProgramView,
+    "Program",
+    icon = "fa-folder-open-o",
+    category = "TEST MENU"
+)
+appbuilder.add_view(
     EcamFileView,
     "File Up/Down",
     icon = "fa-folder-open-o",
     category = "TEST MENU"
 )
 appbuilder.add_view_no_menu(TestStream, "stream")
-appbuilder.add_api(TestTableApi)
+#appbuilder.add_api(TestTableApi)
 appbuilder.add_api(ContentsManager)
 appbuilder.add_api(ContentMasterApi)
+appbuilder.add_api(ProgramApi)
