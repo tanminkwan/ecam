@@ -1,4 +1,4 @@
-from flask import render_template, request, Response, send_file, jsonify
+from flask import g, render_template, request, Response, send_file, jsonify
 from flask_appbuilder.models.sqla.interface import SQLAInterface
 from flask_appbuilder import BaseView, ModelView, ModelRestApi, has_access
 from flask_appbuilder.filemanager import FileManager, uuid_namegen
@@ -70,6 +70,8 @@ class ContentMasterView(ModelView):
     add_exclude_columns = ['id','create_on']
 
 class ContentMasterApi(ModelRestApi):
+
+    resource_name = 'contentmaster'
     
     datamodel = SQLAInterface(ContentMaster)
     add_columns = ['filename', 'description', 'stored_filename']
@@ -92,12 +94,67 @@ class ProgramView(ModelView):
 
 class ProgramApi(ModelRestApi):
     
+    resource_name = 'program'
+
     datamodel = SQLAInterface(Program)
     add_columns = ['program_name', 'description', 'author']
     edit_columns = ['description', 'author']
     list_columns = ['program_name','description','author','contentmaster','user_id','create_on','hostname']
     show_columns = ['program_name','description','author','contentmaster','user_id','create_on','hostname']
 
+class UserManager(BaseApi):
+    
+    resource_name = 'user'
+    
+    @expose('/myprofile', methods=['GET'])
+    @protect()
+    def myprofile(self):
+        """Get My Profile
+        ---
+        get:
+          description: >-
+            Get My Profile
+          responses:
+            200:
+              description: Connected user information
+              content:
+                application/json:
+                  schema:
+                    type: object
+                    properties:
+                      return_code:
+                        type: integer
+                      username:
+                        type: string
+                      first_name:
+                        type: string
+                      last_name:
+                        type: string
+                      email:
+                        type: string
+                      created_on:
+                        type: string
+                      last_login:
+                        type: string
+                    example:
+                      return_code: 1
+                      username: tiffanie
+                      first_name: Hennry
+                      last_name: Kim
+                      email: tiffanie@gmail.com
+                      created_on: Mon, 27 Dec 2021 16:35:52 GMT
+                      last_login: Wed, 12 Jan 2022 15:55:14 GMT
+        """
+        resp = dict(return_code = 1
+                  , username    = g.user.username
+                  , first_name  = g.user.first_name
+                  , last_name   = g.user.last_name
+                  , email       = g.user.email
+                  , created_on  = g.user.created_on
+                  , last_login  = g.user.last_login)
+        
+        return jsonify(resp), 201
+        
 class ContentsManager(BaseApi):
     
     resource_name = 'contents'
@@ -273,5 +330,6 @@ appbuilder.add_view(
 appbuilder.add_view_no_menu(TestStream, "stream")
 #appbuilder.add_api(TestTableApi)
 appbuilder.add_api(ContentsManager)
+appbuilder.add_api(UserManager)
 appbuilder.add_api(ContentMasterApi)
 appbuilder.add_api(ProgramApi)
