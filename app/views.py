@@ -217,10 +217,14 @@ class ContentsManager(BaseApi):
         file = request.files['file']
         filetype = file.filename.split('.')[-1]
         
-        if filetype.lower() not in ['mp4','mov','jpg','png','gif']:
+        if filetype.lower() in ['mp4','mov']:
+            base_path = None
+        elif filetype.lower() in ['jpg','jpeg','png','gif']:
+            base_path = app.config['UPLOAD_FOLDER'] + "images/"
+        else:
             return jsonify({'return_code':-1, 'message':filetype+' is not a video type.'}), 415
         
-        fm = FileManager()        
+        fm = FileManager(base_path=base_path)      
         
         sfilename = fm.save_file(file, uuid_namegen(file))
         
