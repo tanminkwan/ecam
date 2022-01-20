@@ -74,10 +74,12 @@ class ContentMasterApi(ModelRestApi):
     resource_name = 'contentmaster'
     
     datamodel = SQLAInterface(ContentMaster)
-    add_columns = ['filename', 'description', 'stored_filename']
-    edit_columns = ['filename', 'description']
-    list_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','user_id','create_on','hostname']
-    show_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','user_id','create_on','hostname']
+    add_columns = ['filename', 'description', 'stored_filename', 'ref_stored_filename']
+    edit_columns = ['filename', 'description', 'ref_stored_filename']
+    list_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','ref_stored_filename'\
+        ,'user_id','create_on','hostname']
+    show_columns = ['content_type','filename','description','valid_yn','stream_url','manifest_path','stored_filename','ref_stored_filename'\
+        ,'user_id','create_on','hostname']
     
     def post_add(self, item):
         """

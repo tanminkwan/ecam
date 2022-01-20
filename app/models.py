@@ -26,6 +26,7 @@ class ContentMaster(Model):
     description     = Column(String(500), nullable=True, comment='설명')
     content_type    = Column(String(50), nullable=True, comment='컨텐츠 파일 Type')
     manifest_path   = Column(String(500), nullable=True, comment='m8u3 파일 url path')
+    ref_stored_filename = Column(String(500), nullable=True, comment='참조하는 파일 이름')
     valid_yn        = Column(Enum(YnEnum), info={'enum_class':YnEnum}, comment='파일 유효성 여부')
     hostname        = Column(String(200), default=get_hostname, nullable=False, comment='입력 서버')
     user_id         = Column(String(100), default=get_user, nullable=False, comment='입력 user')
