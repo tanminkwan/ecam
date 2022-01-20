@@ -9,10 +9,11 @@ def batch_transVideos():
     print('batch_transVideos : ', datetime.now())
     
 def updateContentsInfo(stored_filename):
+
+    manifest_path, content_type, fullfilename = _getManifestPath(stored_filename)
     
-    if _isStreamValid(stored_filename):
+    if _isStreamValid(fullfilename):
         valid_yn = 'YES'
-        manifest_path, content_type = _getManifestPath(stored_filename)
     else:
         valid_yn = 'NO'
         manifest_path, content_type = '', ''
@@ -31,9 +32,7 @@ def updateContentsInfo(stored_filename):
     
     db.session.commit()
     
-def _isStreamValid(stored_filename):
-    
-    fullfilename = app.config['IMG_UPLOAD_URL'] + stored_filename
+def _isStreamValid(fullfilename):
     
     return os.path.isfile(fullfilename)
 
@@ -43,9 +42,12 @@ def _getManifestPath(stored_filename):
     
     if filetype in ['mp4','mov']:
         manifest_path = '/contents/' + stored_filename + '/playlist.m3u8'
-    elif filetype in ['jpg','png','gif']:
+        fullfilename = app.config['UPLOAD_FOLDER'] + stored_filename
+    elif filetype in ['jpg','jpeg','png','gif']:
         manifest_path = '/images/' + stored_filename
+        fullfilename = app.config['IMG_UPLOAD_FOLDER'] + stored_filename
     else:
         manifest_path = ''
+        fullfilename = ''
         
-    return manifest_path, filetype
+    return manifest_path, filetype, fullfilename
