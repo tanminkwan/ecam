@@ -96,13 +96,13 @@ LANGUAGES = {
 # ---------------------------------------------------
 if os.name == 'nt':
     UPLOAD_FOLDER = "C:/static/uploads/"
-    IMG_UPLOAD_FOLDER = "C:/static/uploads/"
+    IMG_UPLOAD_FOLDER = "C:/static/uploads/images/"
 else:
     # The file upload folder, when using models with files
     UPLOAD_FOLDER = "/static/uploads/"
 
     # The image upload folder, when using models with images
-    IMG_UPLOAD_FOLDER = "/static/uploads/"
+    IMG_UPLOAD_FOLDER = "/static/uploads/images/"
 
 # The image upload url, when using models with images
 IMG_UPLOAD_URL = "/static/uploads/"

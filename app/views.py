@@ -220,7 +220,7 @@ class ContentsManager(BaseApi):
         if filetype.lower() in ['mp4','mov']:
             base_path = None
         elif filetype.lower() in ['jpg','jpeg','png','gif']:
-            base_path = app.config['UPLOAD_FOLDER'] + "images/"
+            base_path = app.config['IMG_UPLOAD_FOLDER']
         else:
             return jsonify({'return_code':-1, 'message':filetype+' is not a video type.'}), 415
         
