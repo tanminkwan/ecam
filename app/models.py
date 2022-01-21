@@ -4,7 +4,7 @@ from flask_appbuilder.models.mixins import FileColumn
 from sqlalchemy import Table, Column, Integer, String, Text, ForeignKey, DateTime, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from .common import get_user, get_hostname, YnEnum
+from .common import get_user, get_hostname, get_thumbnailpath, YnEnum
 from . import app
 
 """
@@ -37,6 +37,9 @@ class ContentMaster(Model):
     def stream_url(self):
         return app.config['STREAM_URL'] if self.valid_yn is not None and self.valid_yn.name == 'YES' else ''
     
+    def thumbnail_path(self):
+        return get_thumbnailpath(self.stored_filename)
+
     def __repr__(self):
         return self.filename
 
