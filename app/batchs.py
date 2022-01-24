@@ -10,17 +10,19 @@ def batch_transVideos():
     
 def updateContentsInfo(stored_filename):
 
-    manifest_path, content_type, fullfilename = _getManifestPath(stored_filename)
+    manifest_path, file_type, content_type, fullfilename\
+        = _getManifestPath(stored_filename)
     
     if _isStreamValid(fullfilename):
         valid_yn = 'YES'
     else:
         valid_yn = 'NO'
-        manifest_path, content_type = '', ''
+        manifest_path, file_type, content_type = '', '', ''
         
     update_dict = dict(
         valid_yn      = valid_yn
       , manifest_path = manifest_path
+      , file_type     = file_type
       , content_type  = content_type
     )
     
@@ -43,11 +45,14 @@ def _getManifestPath(stored_filename):
     if filetype in ['mp4','mov']:
         manifest_path = '/contents/' + stored_filename + '/playlist.m3u8'
         fullfilename = app.config['UPLOAD_FOLDER'] + stored_filename
+        contentType = 'video'
     elif filetype in ['jpg','jpeg','png','gif']:
         manifest_path = '/images/' + stored_filename
         fullfilename = app.config['IMG_UPLOAD_FOLDER'] + stored_filename
+        contentType = 'image'
     else:
         manifest_path = ''
         fullfilename = ''
+        contentType = ''
         
-    return manifest_path, filetype, fullfilename
+    return manifest_path, filetype, contentType, fullfilename
