@@ -14,5 +14,13 @@ Base Skeleton to start your application using Flask-AppBuilder
     # Run dev server
     $ flask run
 
+- Migrate DB Models::
+
+    # Alembic을 처음 실행
+    $ flask db init
+    # db migration code 생성
+    $ flask db migrate
+    # db migration code 실행
+    $ flask db upgrade
 
 That's it!!
